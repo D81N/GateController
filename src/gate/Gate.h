@@ -14,9 +14,11 @@ private:
     float maxCurrent;
 
 public:
-    Gate(uint8_t currentSensorPin, float minCurrent, float maxCurrent,
-         uint8_t leftOpenPin, uint8_t leftClosePin,
-         uint8_t rightOpenPin, uint8_t rightClosePin,
+    Gate(uint8_t currentSensorPin,
+         float minCurrent,
+         float maxCurrent,
+         GateLeaf& left,
+         GateLeaf& right,
          uint32_t delayBtwAction);
     void initPins() const;
     GateLeaf& getLeft();

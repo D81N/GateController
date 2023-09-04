@@ -1,11 +1,13 @@
 #include "Gate.h"
 
 Gate::Gate(uint8_t currentSensorPin, float minCurrent, float maxCurrent,
-           uint8_t leftOpenPin, uint8_t leftClosePin,
-           uint8_t rightOpenPin, uint8_t rightClosePin,
+           GateLeaf& left,  GateLeaf& right,
            uint32_t delayBtwAction) :
-        currentSensorPin(currentSensorPin), minCurrent(minCurrent), maxCurrent(maxCurrent),
-        left(leftOpenPin, leftClosePin), right(rightOpenPin, rightClosePin),
+        currentSensorPin(currentSensorPin),
+        minCurrent(minCurrent),
+        maxCurrent(maxCurrent),
+        left(left),
+        right(right),
         state(State::STOPPED),
         error(Error::NONE),
         delayBtwAction(delayBtwAction) {}
