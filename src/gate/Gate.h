@@ -9,21 +9,15 @@ private:
     State state;
     Error error;
     uint32_t delayBtwAction;
-    uint8_t currentSensorPin;
-    float minCurrent;
-    float maxCurrent;
 
 public:
-    Gate(uint8_t currentSensorPin,
-         float minCurrent,
-         float maxCurrent,
-         GateLeaf& left,
-         GateLeaf& right,
-         uint32_t delayBtwAction);
+    Gate(GateLeaf& left, GateLeaf& right, uint32_t delayBtwAction);
     void initPins() const;
     GateLeaf& getLeft();
     GateLeaf& getRight();
     State& getState();
+    Error& getError();
+    bool errorIsPresent();
     void open();
     void close();
     void stop();

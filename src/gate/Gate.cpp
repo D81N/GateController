@@ -1,11 +1,6 @@
 #include "Gate.h"
 
-Gate::Gate(uint8_t currentSensorPin, float minCurrent, float maxCurrent,
-           GateLeaf& left,  GateLeaf& right,
-           uint32_t delayBtwAction) :
-        currentSensorPin(currentSensorPin),
-        minCurrent(minCurrent),
-        maxCurrent(maxCurrent),
+Gate::Gate(GateLeaf& left, GateLeaf& right, uint32_t delayBtwAction) :
         left(left),
         right(right),
         state(State::STOPPED),
@@ -17,15 +12,15 @@ void Gate::initPins() const {
     left.initPins();
 }
 
-GateLeaf& Gate::getLeft() {
+GateLeaf &Gate::getLeft() {
     return left;
 }
 
-GateLeaf& Gate::getRight() {
+GateLeaf &Gate::getRight() {
     return right;
 }
 
-State& Gate::getState() {
+State &Gate::getState() {
     return state;
 }
 
@@ -57,4 +52,12 @@ void Gate::openSingle() {
 void Gate::closeSingle() {
     state = State::CLOSING_LEAF;
     left.close();
+}
+
+Error &Gate::getError() {
+    return error;
+}
+
+bool Gate::errorIsPresent() {
+    return error != Error::NONE;
 }
