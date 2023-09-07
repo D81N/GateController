@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/network/Network.h src/gate_server/GateServer.cpp src/gate_server/GateServer.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/network/Network.h src/gate_server/GateServer.cpp src/gate_server/GateServer.h src/settings/Settings.cpp src/settings/Settings.h)
