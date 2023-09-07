@@ -7,8 +7,6 @@ void Network::startSoftAP(const char *ssid, const char *password) {
 
 void Network::connectToWifi(const char *ssid, const char *password) {
 
-    Serial.begin(9600);
-
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     Serial.println("");
@@ -22,5 +20,4 @@ void Network::connectToWifi(const char *ssid, const char *password) {
     Serial.println(ssid);
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
-    Serial.end();
 }
