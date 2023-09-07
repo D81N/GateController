@@ -4,8 +4,8 @@
 
 class Gate {
 private:
-    GateLeaf left;
-    GateLeaf right;
+    GateLeaf& left;
+    GateLeaf& right;
     State state;
     Error error;
     uint32_t delayBtwAction;

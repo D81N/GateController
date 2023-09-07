@@ -4,7 +4,7 @@
 class GateServer {
 private:
     ESP8266WebServer server;
-    Gate gate;
+    Gate& gate;
 
     void initRouting();
     void handleGetSettings();
@@ -13,6 +13,7 @@ private:
 
 public:
     GateServer(int32_t port, Gate& gate);
+    Gate& getGate();
     void handleClient();
     void start();
 };

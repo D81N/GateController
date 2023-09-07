@@ -5,7 +5,7 @@ Gate::Gate(GateLeaf& left, GateLeaf& right) :
         right(right),
         state(State::STOPPED),
         error(Error::NONE),
-        delayBtwAction(5000) {}
+        delayBtwAction(5000) { }
 
 void Gate::initPins() const {
     right.initPins();

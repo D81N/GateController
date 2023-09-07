@@ -2,9 +2,9 @@
 
 class GateLeaf {
 private:
-    uint8_t openPin{};
-    uint8_t closePin{};
-    uint8_t speed{};
+    uint8_t openPin;
+    uint8_t closePin;
+    uint8_t speed;
 
 public:
     GateLeaf();
@@ -14,4 +14,7 @@ public:
     void open() const;
     void close() const;
     void stop() const;
+    uint8_t getOpenPin() const;
+    uint8_t getClosePin() const;
+    uint8_t getSpeed() const;
 };

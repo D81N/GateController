@@ -73,7 +73,6 @@ void GateServer::handleOpenGate() {
     server.on("/open-gate", HTTP_POST, [&]() {
 
         String jsonResponse;
-
         StaticJsonDocument<200> doc;
 
         if (gate.errorIsPresent()) {
@@ -119,4 +118,8 @@ void GateServer::start() {
     initRouting();
     server.serveStatic("/", LittleFS, "/");
     server.begin();
+}
+
+Gate &GateServer::getGate() {
+    return gate;
 }
