@@ -1,16 +1,13 @@
 #include "GateLeaf.h"
 
-GateLeaf::GateLeaf(uint8_t openPin, uint8_t closePin) {
-    this->openPin = openPin;
-    this->closePin = closePin;
-}
+GateLeaf::GateLeaf() = default;
 
 void GateLeaf::open() const {
-    digitalWrite(openPin, HIGH);
+    analogWrite(openPin, speed);
 }
 
 void GateLeaf::close() const {
-    digitalWrite(closePin, HIGH);
+    analogWrite(closePin, speed);
 }
 
 void GateLeaf::stop() const {
@@ -23,4 +20,18 @@ void GateLeaf::initPins() const {
     pinMode(closePin, OUTPUT);
     digitalWrite(openPin, LOW);
     digitalWrite(closePin, LOW);
+}
+
+void GateLeaf::configureGateLeaf(uint8_t newOpenPin, uint8_t newClosePin, uint8_t newSpeed) {
+    this->openPin = newOpenPin;
+    this->closePin = newClosePin;
+    this->speed = newSpeed;
+}
+
+void GateLeaf::configureGateLeaf(const String& json, const String& gateLeaf) {
+    StaticJsonDocument<255> doc;
+    deserializeJson(doc, json);
+    configureGateLeaf(doc[gateLeaf + "GateLeafOpenPin"],
+                      doc[gateLeaf + "GateLeafClosePin"],
+                      doc[gateLeaf + "GateLeafSpeed"]);
 }
