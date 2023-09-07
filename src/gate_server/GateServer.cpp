@@ -28,27 +28,44 @@ void GateServer::handlePostSettings() {
     server.on("/settings", HTTP_POST, [&]() {
         StaticJsonDocument<255> doc;
 
-        doc["leftGateLeafOpenPin"] = server.arg("leftGateLeafOpenPin").toInt();
-        doc["leftGateLeafClosePin"] = server.arg("leftGateLeafClosePin").toInt();
-        doc["leftGateLeafSpeed"] = server.arg("leftGateLeafSpeed").toInt();
-        doc["rightGateLeafOpenPin"] = server.arg("rightGateLeafOpenPin").toInt();
-        doc["rightGateLeafClosePin"] = server.arg("rightGateLeafClosePin").toInt();
-        doc["rightGateLeafSpeed"] = server.arg("rightGateLeafSpeed").toInt();
-        doc["delayBtwGateLeaves"] = server.arg("delayBtwGateLeaves").toInt();
+        if (gate.getState() == State::OPENED || gate.getState() == State::CLOSED || gate.getState() == State::STOPPED) {
+            doc["leftGateLeafOpenPin"] = server.arg("leftGateLeafOpenPin").toInt();
+            doc["leftGateLeafClosePin"] = server.arg("leftGateLeafClosePin").toInt();
+            doc["leftGateLeafSpeed"] = server.arg("leftGateLeafSpeed").toInt();
+            doc["rightGateLeafOpenPin"] = server.arg("rightGateLeafOpenPin").toInt();
+            doc["rightGateLeafClosePin"] = server.arg("rightGateLeafClosePin").toInt();
+            doc["rightGateLeafSpeed"] = server.arg("rightGateLeafSpeed").toInt();
+            doc["delayBtwGateLeaves"] = server.arg("delayBtwGateLeaves").toInt();
 
-        String settings;
-        serializeJsonPretty(doc, settings);
+            gate.setDelayBtwGateLeaves(doc["delayBtwGateLeaves"]);
+            gate.getLeft().reConfigureGateLeaf(doc["leftGateLeafOpenPin"],
+                                            doc["leftGateLeafClosePin"],
+                                            doc["leftGateLeafSpeed"]);
+            gate.getRight().reConfigureGateLeaf(doc["rightGateLeafOpenPin"],
+                                             doc["rightGateLeafClosePin"],
+                                             doc["rightGateLeafSpeed"]);
+            gate.initPins();
 
-        if (!Settings::saveSettings(settings)) {
-            String response;
-            doc.clear();
-            doc["message"] = "Can`t save settings.";
-            serializeJsonPretty(doc, response);
-            server.send(423, "application/json", response);
+            String settings;
+            serializeJsonPretty(doc, settings);
+
+            if (!Settings::saveSettings(settings)) {
+                String response;
+                doc.clear();
+                doc["message"] = "Error occurred while saving settings.";
+                serializeJsonPretty(doc, response);
+                server.send(423, "application/json", response);
+                return;
+            }
+
+            server.send(200, "application/json", settings);
             return;
         }
 
-        server.send(200, "application/json", settings);
+        String response;
+        doc["message"] = "Not allowed change settings while gate is already in action.";
+        serializeJsonPretty(doc, response);
+        server.send(423, "application/json", response);
     });
 }
 
@@ -81,10 +98,9 @@ void GateServer::handleOpenGate() {
             return;
         }
 
-        gate.open();
-
         doc["message"] = "Gate is opening...";
         serializeJsonPretty(doc, jsonResponse);
+        gate.open();
         server.send(200, "application/json", jsonResponse);
     });
 }
@@ -104,9 +120,3 @@ void GateServer::start() {
     server.serveStatic("/", LittleFS, "/");
     server.begin();
 }
-
-
-
-
-
-
