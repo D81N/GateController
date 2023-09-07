@@ -7,6 +7,8 @@ private:
     Gate gate;
 
     void initRouting();
+    void handleGetSettings();
+    void handlePostSettings();
     void handleOpenGate();
 
 public:
