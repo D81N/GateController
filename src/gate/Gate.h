@@ -11,7 +11,8 @@ private:
     uint32_t delayBtwAction;
 
 public:
-    Gate(GateLeaf& left, GateLeaf& right, uint32_t delayBtwAction);
+    Gate(GateLeaf& left, GateLeaf& right);
+    void setDelayBtwGateLeaves(uint32_t delay);
     void initPins() const;
     GateLeaf& getLeft();
     GateLeaf& getRight();
