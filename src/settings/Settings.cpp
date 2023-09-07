@@ -1,19 +1,19 @@
 #include "Settings.h"
 
-int Settings::saveSettings(const String& settings) {
+bool Settings::saveSettings(const String& settings) {
     File file = LittleFS.open("/settings.json", "w");
     if (!file) {
         Serial.println("Error opening file");
-        return 0;
+        return false;
     }
 
     if (!file.print(settings)) {
         Serial.println("Error writing file");
-        return 0;
+        return false;
     }
 
     file.close();
-    return 1;
+    return true;
 }
 
 String Settings::readSettings() {
