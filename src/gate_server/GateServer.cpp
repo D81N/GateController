@@ -38,12 +38,12 @@ void GateServer::handlePostSettings() {
             doc["delayBtwGateLeaves"] = server.arg("delayBtwGateLeaves").toInt();
 
             gate.setDelayBtwGateLeaves(doc["delayBtwGateLeaves"]);
-            gate.getLeft().reConfigureGateLeaf(doc["leftGateLeafOpenPin"],
-                                            doc["leftGateLeafClosePin"],
-                                            doc["leftGateLeafSpeed"]);
-            gate.getRight().reConfigureGateLeaf(doc["rightGateLeafOpenPin"],
-                                             doc["rightGateLeafClosePin"],
-                                             doc["rightGateLeafSpeed"]);
+            gate.getLeft().configureGateLeaf(doc["leftGateLeafOpenPin"],
+                                             doc["leftGateLeafClosePin"],
+                                             doc["leftGateLeafSpeed"]);
+            gate.getRight().configureGateLeaf(doc["rightGateLeafOpenPin"],
+                                              doc["rightGateLeafClosePin"],
+                                              doc["rightGateLeafSpeed"]);
             gate.initPins();
 
             String settings;
