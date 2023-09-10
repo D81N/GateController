@@ -1,6 +1,6 @@
 #include "GateLeaf.h"
 
-GateLeaf::GateLeaf() { }
+GateLeaf::GateLeaf() = default;
 
 void GateLeaf::open() const {
     analogWrite(openPin, speed);
@@ -34,16 +34,4 @@ void GateLeaf::configureGateLeaf(const String& json, const String& gateLeaf) {
     configureGateLeaf(doc[gateLeaf + "GateLeafOpenPin"],
                       doc[gateLeaf + "GateLeafClosePin"],
                       doc[gateLeaf + "GateLeafSpeed"]);
-}
-
-uint8_t GateLeaf::getOpenPin() const {
-    return openPin;
-}
-
-uint8_t GateLeaf::getClosePin() const {
-    return closePin;
-}
-
-uint8_t GateLeaf::getSpeed() const {
-    return speed;
 }
