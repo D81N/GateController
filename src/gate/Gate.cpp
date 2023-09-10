@@ -65,3 +65,21 @@ bool Gate::errorIsPresent() {
 void Gate::setDelayBtwGateLeaves(uint32_t delay) {
     delayBtwAction = delay;
 }
+
+State Gate::recognizeAction(bool oL, bool cL, bool oR, bool cR) {
+
+    if (oL && oR)
+        return State::OPENING;
+
+    if (cL && cR)
+        return State::CLOSING;
+
+    if (oR)
+        return State::OPENING_LEAF;
+
+    if (cR)
+        return State::CLOSING_LEAF;
+
+    return State::STOPPED;;
+}
+

@@ -24,4 +24,5 @@ public:
     void stop();
     void openSingle();
     void closeSingle();
+    static State recognizeAction(bool oL, bool cL, bool oR, bool cR);
 };
