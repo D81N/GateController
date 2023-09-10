@@ -69,43 +69,66 @@ void GateServer::handlePostSettings() {
     });
 }
 
-void GateServer::handleOpenGate() {
-    server.on("/open-gate", HTTP_POST, [&]() {
-
+void GateServer::handlePostGate() {
+    server.on("/gate", HTTP_POST, [&]() {
+        StaticJsonDocument<255> doc;
         String jsonResponse;
-        StaticJsonDocument<200> doc;
 
         if (gate.errorIsPresent()) {
-            doc["message"] = "Can`t open gate. Error is present.";
+            doc["message"] = "Can`t perform action. Error is present.";
             serializeJsonPretty(doc, jsonResponse);
             server.send(503, "application/json", jsonResponse);
             return;
         }
 
-        if (gate.getState() == State::CLOSING_LEAF || gate.getState() == State::OPENING_LEAF ||
-            gate.getState() == State::CLOSING || gate.getState() == State::OPENING) {
-            doc["message"] = "Can`t open gate. It`s already in action.";
+        bool leftOpen = server.arg("leftOpen").equalsIgnoreCase("true");
+        bool leftClose = server.arg("leftClose").equalsIgnoreCase("true");
+        bool rightOpen = server.arg("rightOpen").equalsIgnoreCase("true");
+        bool rightClose = server.arg("rightClose").equalsIgnoreCase("true");
+
+        State action = Gate::recognizeAction(leftOpen, leftClose, rightOpen, rightClose);
+
+        if (action == State::STOPPED) {
+            doc["message"] = "Gate stopped.";
+            serializeJsonPretty(doc, jsonResponse);
+            gate.stop();
+            server.send(200, "application/json", jsonResponse);
+            return;
+        }
+
+        if (gate.isPerformingAction()) {
+            doc["message"] = "Can`t perform action. Gate is already in action.";
             serializeJsonPretty(doc, jsonResponse);
             server.send(423, "application/json", jsonResponse);
             return;
         }
 
-        if (gate.getState() == State::OPENED) {
-            doc["message"] = "Gate is already opened.";
-            serializeJsonPretty(doc, jsonResponse);
-            server.send(423, "application/json", jsonResponse);
-            return;
+        switch (action) {
+            case State::OPENING:
+                gate.open();
+                doc["message"] = "Gate opening...";
+                break;
+            case State::CLOSING:
+                gate.close();
+                doc["message"] = "Gate closing...";
+                break;
+            case State::OPENING_LEAF:
+                gate.openSingle();
+                doc["message"] = "Gate leaf opening...";
+                break;
+            case State::CLOSING_LEAF:
+                gate.closeSingle();
+                doc["message"] = "Gate leaf closing...";
+                break;
         }
 
-        doc["message"] = "Gate is opening...";
         serializeJsonPretty(doc, jsonResponse);
-        gate.open();
         server.send(200, "application/json", jsonResponse);
     });
 }
 
 void GateServer::initRouting() {
-    handleOpenGate();
+    handlePostGate();
     handleGetSettings();
     handlePostSettings();
 }

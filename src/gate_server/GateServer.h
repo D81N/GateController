@@ -9,7 +9,7 @@ private:
     void initRouting();
     void handleGetSettings();
     void handlePostSettings();
-    void handleOpenGate();
+    void handlePostGate();
 
 public:
     GateServer(int32_t port, Gate& gate);
