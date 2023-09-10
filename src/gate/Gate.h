@@ -19,6 +19,7 @@ public:
     State& getState();
     Error& getError();
     bool errorIsPresent();
+    bool isPerformingAction();
     void open();
     void close();
     void stop();

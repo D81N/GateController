@@ -80,6 +80,13 @@ State Gate::recognizeAction(bool oL, bool cL, bool oR, bool cR) {
     if (cR)
         return State::CLOSING_LEAF;
 
-    return State::STOPPED;;
+    return State::STOPPED;
+}
+
+bool Gate::isPerformingAction() {
+    return state == State::OPENING ||
+            state == State::CLOSING ||
+            state == State::OPENING_LEAF ||
+            state == State::CLOSING_LEAF;
 }
 
