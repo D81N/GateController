@@ -71,7 +71,7 @@ void GateServer::handlePostSettings() {
 
 void GateServer::handlePostGate() {
     server.on("/gate", HTTP_POST, [&]() {
-        StaticJsonDocument<255> doc;
+        StaticJsonDocument<64> doc;
         String jsonResponse;
 
         if (gate.errorIsPresent()) {
@@ -127,10 +127,32 @@ void GateServer::handlePostGate() {
     });
 }
 
+void GateServer::handleGetState() {
+    server.on("/state", HTTP_GET, [&]() {
+        StaticJsonDocument<32> doc;
+        String jsonResponse;
+        doc["state"] = stateToString[(int )gate.getState()];
+        serializeJsonPretty(doc, jsonResponse);
+        server.send(200, "application/json", jsonResponse);
+    });
+}
+
+void GateServer::handleGetError() {
+    server.on("/error", HTTP_GET, [&]() {
+        StaticJsonDocument<32> doc;
+        String jsonResponse;
+        doc["error"] = errorToString[(int )gate.getError()];
+        serializeJsonPretty(doc, jsonResponse);
+        server.send(200, "application/json", jsonResponse);
+    });
+}
+
 void GateServer::initRouting() {
     handlePostGate();
     handleGetSettings();
     handlePostSettings();
+    handleGetState();
+    handleGetError();
 }
 
 void GateServer::handleClient() {

@@ -10,6 +10,8 @@ private:
     void handleGetSettings();
     void handlePostSettings();
     void handlePostGate();
+    void handleGetState();
+    void handleGetError();
 
 public:
     GateServer(int32_t port, Gate& gate);
