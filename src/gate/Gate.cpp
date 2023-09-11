@@ -1,11 +1,11 @@
 #include "Gate.h"
 
-Gate::Gate(GateLeaf& left, GateLeaf& right) :
+Gate::Gate(GateLeaf& left, GateLeaf& right, uint32_t delay) :
         left(left),
         right(right),
         state(State::STOPPED),
         error(Error::NONE),
-        delayBtwAction(5000) { }
+        delayBtwAction(delay) { }
 
 void Gate::initPins() const {
     right.initPins();
