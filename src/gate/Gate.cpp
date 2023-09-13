@@ -26,16 +26,16 @@ State &Gate::getState() {
 
 void Gate::open() {
     state = State::OPENING;
-    left.open();
-    delay(delayBtwAction);
     right.open();
+    delay(delayBtwAction);
+    left.open();
 }
 
 void Gate::close() {
     state = State::CLOSING;
-    right.close();
-    delay(delayBtwAction);
     left.close();
+    delay(delayBtwAction);
+    right.close();
 }
 
 void Gate::stop() {
@@ -46,12 +46,12 @@ void Gate::stop() {
 
 void Gate::openSingle() {
     state = State::OPENING_LEAF;
-    left.open();
+    right.open();
 }
 
 void Gate::closeSingle() {
     state = State::CLOSING_LEAF;
-    left.close();
+    right.close();
 }
 
 Error &Gate::getError() {

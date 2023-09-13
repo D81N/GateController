@@ -27,6 +27,14 @@ void GateServer::handleGetSettings() {
 void GateServer::handlePostSettings() {
     server.on("/settings", HTTP_POST, [&]() {
         StaticJsonDocument<255> doc;
+        String response;
+
+        if (server.args() != 7) {
+            doc["message"] = "Error wrong amount of arguments.";
+            serializeJsonPretty(doc, response);
+            server.send(400, "application/json", response);
+            return;
+        }
 
         if (gate.getState() == State::OPENED || gate.getState() == State::CLOSED || gate.getState() == State::STOPPED) {
             doc["leftGateLeafOpenPin"] = server.arg("leftGateLeafOpenPin").toInt();
@@ -50,7 +58,6 @@ void GateServer::handlePostSettings() {
             serializeJsonPretty(doc, settings);
 
             if (!Settings::saveSettings(settings)) {
-                String response;
                 doc.clear();
                 doc["message"] = "Error occurred while saving settings.";
                 serializeJsonPretty(doc, response);
@@ -62,7 +69,7 @@ void GateServer::handlePostSettings() {
             return;
         }
 
-        String response;
+
         doc["message"] = "Not allowed change settings while gate is already in action.";
         serializeJsonPretty(doc, response);
         server.send(423, "application/json", response);
